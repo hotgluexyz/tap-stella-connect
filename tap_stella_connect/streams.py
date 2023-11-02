@@ -29,7 +29,7 @@ class DataStream(TapStellaConnectStream):
         th.Property("external_url", th.StringType),
         th.Property("language", th.StringType),
         th.Property("survey_id", th.IntegerType),
-        th.Property("survey_name", th.IntegerType),
+        th.Property("survey_name", th.StringType),
         th.Property("tags", th.ArrayType(th.StringType)),
         th.Property("request_created_at", th.DateTimeType),
         th.Property("request_delivery_status", th.StringType),
