@@ -23,13 +23,21 @@ class TapStellaConnectStream(RESTStream):
     @property
     def url_base(self) -> str:
         """Return the API URL root, configurable via tap settings."""
-        # TODO: hardcode a value here, or retrieve it from self.config
         return "https://api.stellaconnect.net/v2"
 
     records_jsonpath = "$[*]"  
 
-    # Set this value or override `get_new_paginator`.
-    next_page_token_jsonpath = "$.next_page"  # noqa: S105
+    def get_next_page_token(
+        self, response: requests.Response, previous_token: Optional[Any]
+    ) -> Any:
+       
+        next_page_token = None
+        data = response.json()
+        if len(data)>0:
+            #Pagination is calculated by sequence_id
+            next_page_token = data[-1].get("sequence_id")
+
+        return next_page_token
 
     @property
     def http_headers(self) -> dict:
@@ -58,17 +66,8 @@ class TapStellaConnectStream(RESTStream):
         params: dict = {}
         if self.replication_key:
             params['created_at_gte'] = self.config['start_date']
+        params["limit"] = self._page_size
+        if next_page_token:
+            params['after'] = next_page_token
         return params
-
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
-        """Parse the response and return an iterator of result records.
-
-        Args:
-            response: The HTTP ``requests.Response`` object.
-
-        Yields:
-            Each record from the source.
-        """
-        # TODO: Parse response body and return a set of records.
-        yield from extract_jsonpath(self.records_jsonpath, input=response.json())
 
