@@ -10,14 +10,14 @@ from singer_sdk import typing as th  # JSON Schema typing helpers
 from tap_stella_connect.client import TapStellaConnectStream
 
 
-
 class DataStream(TapStellaConnectStream):
     # Data Stream Schema Definition
 
     name = "data"
     path = "/data"
     primary_keys: t.ClassVar[list[str]] = ["id"]
-    replication_key = None
+    replication_key = "request_created_at"
+
     schema = th.PropertiesList(
         th.Property("uuid", th.StringType),
         th.Property("sequence_id", th.IntegerType),
