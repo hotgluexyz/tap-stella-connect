@@ -70,7 +70,7 @@ class TapStellaConnectStream(RESTStream):
     ):
         params: dict = {}
         if self.replication_key:
-            params['created_at_gte'] = self.get_starting_time(context)
+            params['responded_at_gte'] = self.get_starting_time(context)
 
         params["limit"] = self._page_size
         if next_page_token:
