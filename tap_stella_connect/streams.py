@@ -16,7 +16,7 @@ class DataStream(TapStellaConnectStream):
     name = "data"
     path = "/data"
     primary_keys: t.ClassVar[list[str]] = ["id"]
-    replication_key = "request_created_at"
+    replication_key = "response_received_at"
 
     schema = th.PropertiesList(
         th.Property("uuid", th.StringType),
